@@ -40,7 +40,7 @@ public class Main {
 		// put the files into hadoop
 		// index
 		out.println("hadoop fs -mkdir /index");
-		out.println("hadoop fs -put ./points_global_index /index/");
+		out.println("hadoop fs -put ./points_tb_global_index /index/");
 		
 		// data
 		out.println("hadoop fs -mkdir /data");
@@ -56,20 +56,20 @@ public class Main {
 	private static void GenSQl(int size) throws Exception {
 		PrintWriter out = new PrintWriter("startSQl.sql");
 		// create table points
-		out.println("create table points (id int,x int,y int) partitioned by (tag STRING);");
+		out.println("create table points_tb (id int,x int,y int) partitioned by (tag STRING);");
 		
 		// add partitions
 		for (int i = 0; i < size; i++) {
-			out.println("alter table points add partition (tag="+i+");");
+			out.println("alter table points_tb add partition (tag="+i+");");
 		}
 		
 		// Load data
 		for(int i=0; i < size; i++){
-			out.println("load data inpath '/data/points_"+i+".csv' into table points partition (tag='"+i+"');");
+			out.println("load data inpath '/data/points_"+i+".csv' into table points_tb partition (tag='"+i+"');");
 		}
 		
 		// Load Index
-		out.println("ALTER TABLE points SET TBLPROPERTIES ('globalIndex'='/index/points_global_index');");
+		out.println("ALTER TABLE points_tb SET TBLPROPERTIES ('globalIndex'='/index/points_tb_global_index');");
 		
 		out.flush();
 		out.close();
@@ -105,7 +105,7 @@ public class Main {
 	}
 
 	private static void printindex(LinkedList<QuadTree.Node> indexNodes) throws Exception {
-		PrintWriter out = new PrintWriter("points_global_index");
+		PrintWriter out = new PrintWriter("points_tb_global_index");
 		PrintWriter out2 = new PrintWriter("index_count.csv");
 		int id = 0;
 		for (QuadTree.Node node : indexNodes) {
