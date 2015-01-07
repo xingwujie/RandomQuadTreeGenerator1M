@@ -56,11 +56,11 @@ public class Main {
 	private static void GenSQl(int size) throws Exception {
 		PrintWriter out = new PrintWriter("startSQl.sql");
 		// create table points
-		out.println("create table points_tb (id int,x int,y int) partitioned by (tag STRING);");
+		out.println("create table IF NOT EXISTS points_tb (id int,x int,y int) partitioned by (tag STRING);");
 		
 		// add partitions
 		for (int i = 0; i < size; i++) {
-			out.println("alter table points_tb add partition (tag="+i+");");
+			out.println("alter table points_tb add partition (tag='"+i+"');");
 		}
 		
 		// Load data
