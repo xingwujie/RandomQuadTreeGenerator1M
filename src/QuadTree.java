@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class QuadTree {
@@ -17,11 +18,11 @@ public class QuadTree {
 
 	Node root;
 
-	static final int maxx = 1000;
-	static final int maxy = 1000;
+	static final int maxx = 1<<31;
+	static final int maxy = 1<<31;
 
-	public void insert(int x, int y) {
-		root = insert(root, 0, 0, maxx - 1, maxy - 1, x, y);
+	public void insert(long x, long y) {
+		root = insert(root, -maxx, -maxy, maxx - 1, maxy - 1, (int) x, (int)y);
 	}
 
 	Node insert(Node node, int ax, int ay, int bx, int by, int x, int y) {
@@ -66,11 +67,11 @@ public class QuadTree {
 	}
 
 	
-	public static QuadTree gentree(int[][] randPoints) {
+	public static QuadTree gentree(List<long[]> randPoints) {
 		QuadTree t = new QuadTree();
 
-		for (int i = 0; i < randPoints.length; i++) {
-			t.insert(randPoints[i][1], randPoints[i][2]);
+		for (long[] prn: randPoints) {
+			t.insert(prn[1], prn[2]);
 		}
 		
 		return t;
